@@ -130,7 +130,6 @@ if __name__ == '__main__':
         index_count += 25
     
     c = 0
-    abc = heap
     while not c>10:
-        print(heappop(heap))
-        c += 1    
+        ans = heappop(heap)
+        print ("Ancestr Count : {} , txid: {}".format(ans[0],ans[1]) )
