@@ -117,40 +117,47 @@ class TranxAncestor:
 
 
 if __name__ == '__main__':
-    start_time = time.perf_counter()
+    try:
+
+        start_time = time.perf_counter()
 
 
-    bitgoExample = TranxAncestor(block_hight=680000)
-    bitgoExample.get_block_hash()
-    all_txids_in_block = bitgoExample.get_all_txids()
-    total_txns = int(bitgoExample.get_total_tx_count())
-    total_index = total_txns/int(25) # 25 is the rate limit as per the api
-    index_count = 0
+        bitgoExample = TranxAncestor(block_hight=680000)
+        bitgoExample.get_block_hash()
+        all_txids_in_block = bitgoExample.get_all_txids()
+        total_txns = int(bitgoExample.get_total_tx_count())
+        total_index = total_txns/int(25) # 25 is the rate limit as per the api
+        index_count = 0
 
-    while (index_count <= total_txns):
-        raw_tx = bitgoExample.get_raw_trnx(index_count)
+        while (index_count <= total_txns):
+            raw_tx = bitgoExample.get_raw_trnx(index_count)
+            
+            if raw_tx:
+                for single_tx_data in raw_tx:
+                    parent_tx = single_tx_data.get('txid')
+                    vin = single_tx_data["vin"]
+                    for temp_data in vin:
+                        raw_tx1=temp_data["txid"]
+                        vout_int=temp_data["vout"]
+                        if raw_tx1 in all_txids_in_block:
+                            # Ancestry found
+                            bitgoExample.calculate_ans.ancient_count=1
+                            bitgoExample.calculate_ans(bitgoExample.get_single_tx_detail(raw_tx1)) #calculate all parents recirsivly
+                            heappush(heap, (-1 * (bitgoExample.calculate_ans.ancient_count),parent_tx))
+
+            index_count += 25
         
-        if raw_tx:
-            for single_tx_data in raw_tx:
-                parent_tx = single_tx_data.get('txid')
-                vin = single_tx_data["vin"]
-                for temp_data in vin:
-                    raw_tx1=temp_data["txid"]
-                    vout_int=temp_data["vout"]
-                    if raw_tx1 in all_txids_in_block:
-                        # Ancestry found
-                        bitgoExample.calculate_ans.ancient_count=1
-                        bitgoExample.calculate_ans(bitgoExample.get_single_tx_detail(raw_tx1)) #calculate all parents recirsivly
-                        heappush(heap, (-1 * (bitgoExample.calculate_ans.ancient_count),parent_tx))
+        c = 0
+        while not c>10:
+            ans = heappop(heap)
+            print ("Ancestr Count : {} , txid: {}".format(int(ans[0]*(-1)),ans[1]) )
+            c += 1
 
-        index_count += 25
-    
-    c = 0
-    while not c>10:
-        ans = heappop(heap)
-        print ("Ancestr Count : {} , txid: {}".format(ans[0],ans[1]) )
-        c += 1
+        end_time = time.perf_counter()
+        print("Program Execution Time {} seconds".format(end_time - start_time))
+        print("End oF the Code")
 
-    end_time = time.perf_counter()
-    print(end_time - start_time, "seconds")
-    print("asdf")
+    except Exception as e:
+        error = common_util.get_error_traceback(sys, e)
+        logger.error_logger(error)
+        raise
