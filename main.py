@@ -19,6 +19,9 @@ block_hash="000000000000000000076c036ff5119e5a5a74df77abf64203473364509f7732"
  
 
 def get_total_tx_count(block_hash):
+    '''
+    calculate the total no of transcaction in the given block
+    '''
     try:
         url = base_url+'block/{}'.format(block_hash)
         response = requests.get(url)
@@ -33,6 +36,10 @@ def get_total_tx_count(block_hash):
 
 
 def get_all_txids(block_hash):
+    '''
+    return list of total transaction in given block
+    '''
+
     try:
         url = base_url+'block/{}/txids'.format(block_hash)
         response = requests.get(url)
@@ -47,27 +54,15 @@ def get_all_txids(block_hash):
 
 
 def get_raw_trnx(index_count):
+    """
+    Returns transaction information given block:
+    """
     try:
         url = base_url+'block/{}/txs/{}'.format(block_hash,index_count)
         response = requests.get(url)
         if response.status_code == 200:
             data = json.loads(response.content.decode('UTF-8'))
             return data
-    except Exception as e:
-        error = common_util.get_error_traceback(sys, e)
-        logger.error_logger(error)
-        raise
-
-
-def vin_address(txid):
-    try:
-        url = base_url+'tx/{}'.format(txid)
-        response = requests.get(url)
-        if response.status_code == 200:
-            data = literal_eval(response.content.decode('UTF-8'))
-            return data
-        pass
-
     except Exception as e:
         error = common_util.get_error_traceback(sys, e)
         logger.error_logger(error)
