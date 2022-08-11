@@ -22,6 +22,9 @@ class TranxAncestor:
         self.base_url = "https://blockstream.info/api/"
 
     def get_block_hash(self):
+        """
+        Returns Block has for provided block height
+        """
         try:
             url = self.base_url+'block-height/{}'.format(self.block_hight)
             self.block_hash = common_util.request_helper(url)
@@ -52,7 +55,6 @@ class TranxAncestor:
         '''
         return  list of transactions in given block hash
         '''
-
         try:
             url = self.base_url+'block/{}/txids'.format(self.block_hash)
             return literal_eval(common_util.request_helper(url))
@@ -80,13 +82,15 @@ class TranxAncestor:
 
     @staticmethod
     def get_single_tx_detail(txid):
+        """ 
+        GIves transaction detail as per provided Txid
+        """
         try:
             base_url = 'https://blockstream.info/api/'
             url = base_url+'tx/{}'.format(txid)
-            response = requests.get(url)
-            if response.status_code == 200:
-                data = json.loads(response.content.decode('UTF-8'))
-                return data
+            response = common_util.request_helper(url)
+            return json.loads(response)
+
         except Exception as e:
             error = common_util.get_error_traceback(sys, e)
             logger.error_logger(error)
@@ -94,6 +98,9 @@ class TranxAncestor:
 
     @staticmethod
     def calculate_ans(single_tx_data):
+        """
+        recursive function to calculate total number of ancestors
+        """
         try:
             vin = single_tx_data["vin"]
             for temp_data in vin:
@@ -142,6 +149,8 @@ if __name__ == '__main__':
     while not c>10:
         ans = heappop(heap)
         print ("Ancestr Count : {} , txid: {}".format(ans[0],ans[1]) )
+        c += 1
 
     end_time = time.perf_counter()
     print(end_time - start_time, "seconds")
+    print("asdf")
