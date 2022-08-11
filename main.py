@@ -96,8 +96,7 @@ def main():
                         raw_tx1=temp_data["txid"]
                         vout_int=temp_data["vout"]
                         if raw_tx1 in all_txids_in_block:
-                            #this is  vin addresa and vout address
-                            # vin_add = vin_address(raw_tx1)
+                            # Ancestry found
                             final_count = final_count+1
                 index_count += 25
 
