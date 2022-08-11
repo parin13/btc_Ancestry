@@ -30,5 +30,5 @@ def request_helper(url):
     response = requests.get(url)
     if response.status_code == 200:
         return response.content.decode('UTF-8')
-    raise
+    
 

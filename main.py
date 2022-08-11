@@ -1,7 +1,7 @@
 import sys,os
 from os.path import dirname, join, abspath
 from heapq import heappop, heappush, heapify
-import datetime
+import time
 import requests
 import json
 from ast import literal_eval
@@ -70,7 +70,8 @@ class TranxAncestor:
         try:
             url = self.base_url+'block/{}/txs/{}'.format(self.block_hash,index_count)
             response = common_util.request_helper(url)
-            return json.loads(response)
+            if response:
+                return json.loads(response)
 
         except Exception as e:
             error = common_util.get_error_traceback(sys, e)
@@ -109,6 +110,9 @@ class TranxAncestor:
 
 
 if __name__ == '__main__':
+    start_time = time.perf_counter()
+
+
     bitgoExample = TranxAncestor(block_hight=680000)
     bitgoExample.get_block_hash()
     all_txids_in_block = bitgoExample.get_all_txids()
@@ -138,3 +142,6 @@ if __name__ == '__main__':
     while not c>10:
         ans = heappop(heap)
         print ("Ancestr Count : {} , txid: {}".format(ans[0],ans[1]) )
+
+    end_time = time.perf_counter()
+    print(end_time - start_time, "seconds")
