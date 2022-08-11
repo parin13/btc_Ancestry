@@ -7,6 +7,7 @@ __version__ = "0.0.0.1"
 import os, sys
 from os.path import dirname, join, abspath
 import uuid 
+import requests, json
 
 
 sys.path.insert(0, abspath(join(dirname(__file__), '..')))
@@ -22,6 +23,12 @@ def generate_uuid4():
     return str(uuid.uuid4()) 
 
 
-def getVins():
-    pass
+def request_helper(url):
+    """
+    ony serves GET request at the moment
+    """
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.content.decode('UTF-8')
+    raise
 
