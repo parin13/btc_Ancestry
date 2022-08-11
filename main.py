@@ -1,17 +1,18 @@
 import sys,os
 from os.path import dirname, join, abspath
+from heapq import heappop, heappush, heapify
 import datetime
 import requests
 import json
 from ast import literal_eval
 
-from common_utils.helpers import common_ut as common_util, custom_exception
+from common_utils.helpers import common_ut as common_util, custom_exception 
 import common_utils.logger
 
-log_dir = "/var/log/bitgo" ## all logs recide on this dir, so need to create this dir first
-log_category="script"
+logger = common_utils.logger.MyLogger(directory="/var/log/bitgo", category="script")
 
-logger = common_utils.logger.MyLogger(log_dir, log_category)
+heap =[]
+heapify(heap)
 
 class TranxAncestor:
 
@@ -71,11 +72,35 @@ class TranxAncestor:
             logger.error_logger(error)
             raise
 
-
+    @staticmethod
+    def get_single_tx_detail(txid):
+        try:
+            base_url = 'https://blockstream.info/api/'
+            url = base_url+'tx/{}'.format(txid)
+            response = requests.get(url)
+            if response.status_code == 200:
+                data = json.loads(response.content.decode('UTF-8'))
+                return data
         except Exception as e:
             error = common_util.get_error_traceback(sys, e)
             logger.error_logger(error)
             raise
+
+
+def calculate_ans(single_tx_data):
+    try:
+        vin = single_tx_data["vin"]
+        for temp_data in vin:
+            raw_tx1=temp_data["txid"]
+            vout_int=temp_data["vout"]
+            if raw_tx1 in all_txids_in_block:
+                calculate_ans.ancient_count += 1
+                calculate_ans(bitgoExample.get_single_tx_detail(raw_tx1))
+            return 0
+    except Exception as e:
+        error = common_util.get_error_traceback(sys, e)
+        logger.error_logger(error)
+        raise
 
 
 if __name__ == '__main__':
@@ -91,15 +116,21 @@ if __name__ == '__main__':
         
         if raw_tx:
             for single_tx_data in raw_tx:
+                parent_tx = single_tx_data.get('txid')
                 vin = single_tx_data["vin"]
                 for temp_data in vin:
                     raw_tx1=temp_data["txid"]
                     vout_int=temp_data["vout"]
                     if raw_tx1 in all_txids_in_block:
                         # Ancestry found
+                        calculate_ans.ancient_count=1
+                        calculate_ans(bitgoExample.get_single_tx_detail(raw_tx1)) #calculate all parents recirsivly
+                        heappush(heap, (-1 * (calculate_ans.ancient_count),parent_tx))
                         ancenstry_count = ancenstry_count+1
         index_count += 25
     
-    print ("Total count  is :",ancenstry_count)   #ancenstry_count = 389
-    
-
+    c = 0
+    abc = heap
+    while not c>10:
+        print(heappop(heap))
+        c += 1    
