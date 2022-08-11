@@ -7,7 +7,7 @@
     "configurations": [
         {
             "name": "Python: Current File",
-            "python": "/home/parin/Documents/bitgo/bitgo/bin/python",
+            "python": "/home/parin/Documents/bitgo/venv_bitgo/bin/python",
             "type": "python",
             "request": "launch",
             "program": "${file}",
