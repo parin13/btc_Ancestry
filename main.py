@@ -78,43 +78,6 @@ class TranxAncestor:
             raise
 
 
-def main():
-    """
-    Entry Point
-    :return:
-    """
-    try:
-
-        block_number = 680000
-        all_txids_in_block = get_all_txids(block_hash) # returns array 
-        total_txns = int(get_total_tx_count(block_hash))
-        total_index = total_txns/int(25) # 25 is the rate limit as per the api
-        index_count = 0
-        ancenstry_count = 0
-        while (index_count <= total_txns):
-            raw_tx = get_raw_trnx(index_count)
-            if raw_tx:
-                for single_tx_data in raw_tx:
-                    vin = single_tx_data["vin"]
-                    for temp_data in vin:
-                        raw_tx1=temp_data["txid"]
-                        vout_int=temp_data["vout"]
-                        if raw_tx1 in all_txids_in_block:
-                            # Ancestry found
-                            ancenstry_count = ancenstry_count+1
-                index_count += 25
-
-        
-        print ("Total count  is :",ancenstry_count)   #ancenstry_count = 389
-        raise
-
-    except Exception as e:
-        error = common_util.get_error_traceback(sys, e)
-        logger.error_logger(error)
-        raise
-
-
-
 if __name__ == '__main__':
     bitgoExample = TranxAncestor("000000000000000000076c036ff5119e5a5a74df77abf64203473364509f7732") #pre calculate the block hash
 
