@@ -20,6 +20,8 @@ Input Block Height: 680000
 
 
 Here are the top 10 transactions with their ancestors :
+
+
 Ancestr Count : 14 , txid: 7d08f0c61cda9379bdf1fa68095f827199a0d4cb6b466a6da3f0dc956772c52b
 Ancestr Count : 13 , txid: b2bab595112517e8b6a06aa9f616272b479e57e21b4da52877ddf385316aa19b
 Ancestr Count : 12 , txid: 4205c68c68266259c5723948e0407dff25600e6420659cef4286dd1ae4658b63
@@ -30,7 +32,9 @@ Ancestr Count : 11 , txid: 4b4c90943c1651eabb8c5dfb6f490c4e56bd6cf42950a0430db17
 Ancestr Count : 11 , txid: 973e5adb05cc1cb80cabc5e451200333c993034153a078733ec06af7bf3c860b
 Ancestr Count : 11 , txid: afe4b90e667df0171f63e6cc95c0a12d24592d436dd2e8b9b2a9998b4099ff6d
 Ancestr Count : 11 , txid: ef6c8e97b62eced1913df503667d49b9f5890cdb201be5d5d6c304af1d3f5db1
-Ancestr Count : 10 , txid: 0ad457d555ad80f8823027d892547b403f807529a31bfb4ff205e836052c7e4dMain Features of my codebase:
+Ancestr Count : 10 , txid: 0ad457d555ad80f8823027d892547b403f807529a31bfb4ff205e836052c7e4d
+
+
 
 Features: 
 
